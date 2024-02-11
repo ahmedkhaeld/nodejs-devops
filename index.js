@@ -1,9 +1,11 @@
 const express = require("express");
 const mongooose = require("mongoose");
+const {MONGO_URI } = require("./config/config");
 
 const app = express();
 
-mongooose.connect("mongodb://admin:password@172.28.0.2:27017/?authSource=admin")
+
+mongooose.connect(MONGO_URI)
 .then(()=>console.log("\n Connected to mongo\n"))
 .catch((e) => console.log("\n ERROR:",e));
 
