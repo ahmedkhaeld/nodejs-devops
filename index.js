@@ -4,6 +4,7 @@ const {MONGO_URI, REDIS_URI, SESSION_SECRET } = require("./config/config");
 let session = require('express-session');
 const {createClient} = require('redis');
 const RedisStore = require("connect-redis").default
+const cors = require("cors")
 
 //import routes
 const postRouter = require("./routers/post.routes")
@@ -35,6 +36,8 @@ async function connectRedis() {
 
 // initialize the app, set middlewares
 const app = express();
+app.enable("trust proxy");
+app.use(cors());
 app.use(session({
     store:  new RedisStore({client: client}),
     secret: SESSION_SECRET,
@@ -43,13 +46,16 @@ app.use(session({
     cookie: {
          secure: false,
          httpOnly: true,
-         maxAge: 30000000000
+         maxAge: 3000000
          }
   }))
 
 app.use(express.json());
 
-
+app.get("/api/v1", (req, res)=>{
+  res.send("Hi");
+  console.log("Hi, ngnix  send you here")
+})
 
 mongooose.connect(MONGO_URI)
 .then(()=>console.log("Connected to MongoDB!!!"))
